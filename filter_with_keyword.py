@@ -1,7 +1,7 @@
 from utils import load_paper_info, filter_papers
 import pandas as pd
 
-src_file = 'cvpr2023.csv'
+src_file = 'cvpr2024.csv'
 
 keywords = [
     'object detection',
@@ -13,7 +13,6 @@ keywords = [
 ]
 
 reversed_keywords = [
-    '3d',
     'bev',
     'active detection',
     'boundary detection',
@@ -48,4 +47,4 @@ paper_infos = filter_papers(paper_infos, keywords, reversed_keywords)
 print('The total number of papers is', len(paper_infos))
 if len(paper_infos) > 0:
     df = pd.DataFrame.from_dict(paper_infos)
-    df.to_csv(f'filted_cvpr2023.csv', index=True, header=True)
+    df.to_csv(f'filted_cvpr2024.csv', index=True, header=True)

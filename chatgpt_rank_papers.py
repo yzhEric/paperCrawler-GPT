@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 from utils import load_paper_info
 import time
 import pandas as pd
@@ -17,7 +17,7 @@ title is :
 abstract is : 
 """
 
-src_file = 'filted_cvpr2023.csv'
+src_file = 'filted_cvpr2024.csv'
 
 paper_infos = load_paper_info(src_file)
 print('The total number of papers is', len(paper_infos))
@@ -25,6 +25,13 @@ print('The total number of papers is', len(paper_infos))
 filter_papers = []
 all_check = False
 total_tokens = 0
+
+#### 重要！！！在这里填写你的api信息
+client = OpenAI(
+    api_key = "YOUR-API-KEY", 
+    base_url = "https://xxx.xxx"
+)
+
 for i, paper in enumerate(tqdm.tqdm(paper_infos)):
     if paper.relevant != -1:
         all_check = True
@@ -44,10 +51,10 @@ for i, paper in enumerate(tqdm.tqdm(paper_infos)):
 
     try:
         # 可能会出现 openai.error.RateLimitError
-        response = openai.ChatCompletion.create(model='gpt-3.5-turbo', messages=prompt, temperature=0, max_tokens=200)
-        total_token = response['usage']['total_tokens']
+        response = client.chat.completions.create(model='gpt-3.5-turbo', messages=prompt, temperature=0, max_tokens=200)
+        total_token = response.usage.total_tokens
         total_tokens += total_token
-        text_prompt = response['choices'][0]['message']['content']
+        text_prompt = response.choices[0].message.content
         print(f'\n num token is {total_token}', text_prompt)
 
         if 'highly relevant' in text_prompt:
